@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 100" fill="none">
+  <defs>
+    <linearGradient id="pGrad" x1="0" y1="0" x2="80" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+  </defs>
+  <!-- Left vertical bar -->
+  <rect x="0" y="6" width="20" height="88" fill="url(#pGrad)" rx="2"/>
+  <!-- P bowl -->
+  <path d="M 14 6 L 50 6 A 32 32 0 0 1 50 70 L 14 70 Z" fill="url(#pGrad)"/>
+  <!-- Inner cutout -->
+  <ellipse cx="38" cy="38" rx="16" ry="18" fill="#07111F"/>
+  <!-- Document lines inside bowl -->
+  <rect x="22" y="22" width="22" height="3" fill="#93C5FD" rx="1"/>
+  <rect x="22" y="30" width="22" height="3" fill="#93C5FD" rx="1"/>
+  <rect x="22" y="38" width="22" height="3" fill="#93C5FD" rx="1"/>
+  <!-- Chevron arrow -->
+  <path d="M 24 76 L 44 88 L 24 100 L 30 100 L 50 88 L 30 76 Z" fill="#38BDF8"/>
+</svg>

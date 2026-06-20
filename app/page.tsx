@@ -17,9 +17,37 @@ import {
 } from "lucide-react";
 
 // === CONFIGURATION ===
-// Swap with your real Stripe Payment Link before going live
-const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/REPLACE_WITH_YOUR_LINK";
-// Swap with your real Google Form URL
+// Paste the real Stripe Payment Link for each tier before going live.
+// On each Stripe Payment Link, set the "After payment → Redirect" to FORM_LINK
+// so the customer is sent straight to the beta onboarding form after paying.
+const PLANS = {
+  founder: {
+    name: "Beta Founder",
+    price: 20,
+    link: "https://buy.stripe.com/REPLACE_WITH_FOUNDER_LINK",
+  },
+  solo: {
+    name: "Solo",
+    price: 35,
+    link: "https://buy.stripe.com/REPLACE_WITH_SOLO_LINK",
+  },
+  pro: {
+    name: "Pro",
+    price: 50,
+    link: "https://buy.stripe.com/REPLACE_WITH_PRO_LINK",
+  },
+  team: {
+    name: "Team",
+    price: 80,
+    link: "https://buy.stripe.com/REPLACE_WITH_TEAM_LINK",
+  },
+} as const;
+
+// Default CTA target (Beta Founder tier) — used by the hero / nav / final CTA.
+const STRIPE_PAYMENT_LINK = PLANS.founder.link;
+
+// Beta onboarding form (Google Form). Also used as the post-payment redirect
+// configured inside each Stripe Payment Link.
 const FORM_LINK = "https://forms.gle/REPLACE_WITH_YOUR_FORM";
 
 // === CONTENT ===
@@ -93,8 +121,8 @@ const FAQ = [
     a: "Today, Invoice Pilot Pro handles invoice creation, customer records, and status tracking. You send the invoice, collect payment the way you do now (cash, check, Zelle, bank transfer), then mark it paid — your dashboard and records update instantly.",
   },
   {
-    q: "What does '$10/month, locked while subscribed' mean?",
-    a: "As long as you stay subscribed to Founder Beta, your price stays $10/month — even after the product moves to standard pricing (Solo, Pro, Team tiers) for new customers. If you ever cancel and rejoin later, you'd rejoin at the then-current price.",
+    q: "What does '$20/month, locked while subscribed' mean?",
+    a: "As long as you stay subscribed to Founder Beta, your price stays $20/month — even after the product moves to standard pricing (Solo, Pro, Team tiers) for new customers. If you ever cancel and rejoin later, you'd rejoin at the then-current price.",
   },
   {
     q: "Is this a replacement for QuickBooks or my accountant?",
@@ -127,7 +155,7 @@ function Logo({ className = "" }: { className?: string }) {
 }
 
 function PrimaryCta({
-  children = "Join Founder Beta — $10/month",
+  children = "Join Founder Beta — $20/month",
   href = STRIPE_PAYMENT_LINK,
   className = "",
 }: {
@@ -162,7 +190,7 @@ function Nav() {
           ))}
         </nav>
         <PrimaryCta className="px-4 py-2 text-[13px]">
-          Join Founder Beta — $10/month
+          Join Founder Beta — $20/month
         </PrimaryCta>
       </div>
     </header>
@@ -222,7 +250,7 @@ function Hero() {
           </p>
           <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
             <PrimaryCta className="px-6 py-3.5 text-[15px]">
-              Join Founder Beta — $10/month
+              Join Founder Beta — $20/month
               <ArrowRight className="h-4 w-4" />
             </PrimaryCta>
             <div className="flex items-center gap-2 text-sm text-text-muted">
@@ -329,14 +357,14 @@ function FounderExplainer() {
             </h2>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-text-muted">
               Founder Beta members get full access to everything live today, lock
-              in $10/month for as long as they stay subscribed, and shape what we
+              in $20/month for as long as they stay subscribed, and shape what we
               build next.
             </p>
           </div>
           <ul className="space-y-5">
             {[
               {
-                title: "$10/month, locked while subscribed",
+                title: "$20/month, locked while subscribed",
                 body: "Even as new customers pay standard pricing later.",
               },
               {
@@ -398,6 +426,66 @@ function Roadmap() {
   );
 }
 
+const PRICING_TIERS = [
+  {
+    key: "founder" as const,
+    name: PLANS.founder.name,
+    price: PLANS.founder.price,
+    link: PLANS.founder.link,
+    badge: "Founder Beta",
+    featured: true,
+    blurb: "Locked in for as long as you stay subscribed. Limited spots.",
+    bullets: [
+      "Everything under What's Live today",
+      "Every roadmap feature, the moment it ships",
+      "Direct say in what we build next",
+      "Priority onboarding & support",
+    ],
+    cta: `Join Founder Beta — $${PLANS.founder.price}/month`,
+  },
+  {
+    key: "solo" as const,
+    name: PLANS.solo.name,
+    price: PLANS.solo.price,
+    link: PLANS.solo.link,
+    blurb: "For one-person shops running their own jobs.",
+    bullets: [
+      "Everything in Founder Beta",
+      "Unlimited invoices & customers",
+      "Email support",
+    ],
+    cta: `Start Solo — $${PLANS.solo.price}/month`,
+  },
+  {
+    key: "pro" as const,
+    name: PLANS.pro.name,
+    price: PLANS.pro.price,
+    link: PLANS.pro.link,
+    blurb: "For growing operators ready to scale.",
+    bullets: [
+      "Everything in Solo",
+      "Deposits & partial payments",
+      "Automated follow-ups",
+      "Priority support",
+    ],
+    cta: `Start Pro — $${PLANS.pro.price}/month`,
+  },
+  {
+    key: "team" as const,
+    name: PLANS.team.name,
+    price: PLANS.team.price,
+    link: PLANS.team.link,
+    blurb: "For crews with multiple users on the road.",
+    bullets: [
+      "Everything in Pro",
+      "Multi-user access",
+      "Team roles & permissions",
+      "Dedicated onboarding",
+    ],
+    cta: `Start Team — $${PLANS.team.price}/month`,
+  },
+];
+
 function Pricing() {
   return (
     <section id="pricing" className="border-t border-border bg-bg-secondary/40">
@@ -407,70 +495,64 @@ function Pricing() {
             PRICING
           </p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-[40px]">
-            Founder Beta pricing.
+            Beta onboarding plans.
           </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-text-muted">
+            Pick the tier that fits your shop. Founder Beta locks in $
+            {PLANS.founder.price}/month for as long as you stay subscribed.
+          </p>
         </div>
-        <div className="mx-auto mt-14 grid max-w-5xl gap-6 md:grid-cols-2">
-          <div className="screenshot-frame relative rounded-2xl p-8">
-            <div className="absolute -top-3 left-8">
-              <span className="rounded-full bg-blue-primary px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white">
-                Founder Beta
-              </span>
-            </div>
-            <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-5xl font-semibold tracking-tight">$10</span>
-              <span className="text-text-muted">/ month</span>
-            </div>
-            <p className="mt-3 text-sm text-text-muted">
-              Locked in for as long as you stay subscribed. Limited spots.
-            </p>
-            <ul className="mt-7 space-y-3 text-sm text-text-muted">
-              {[
-                "Everything under What's Live today",
-                "Every roadmap feature, the moment it ships",
-                "Direct say in what we build next",
-                "Priority onboarding & support",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-            <PrimaryCta className="mt-8 w-full px-6 py-3.5 text-[15px]">
-              Join Founder Beta — $10/month
-              <ArrowRight className="h-4 w-4" />
-            </PrimaryCta>
-          </div>
-          <div className="rounded-2xl border border-border bg-surface/40 p-8 text-text-muted">
-            <p className="text-sm font-medium uppercase tracking-wider text-text-dim">
-              After Beta — standard pricing
-            </p>
-            <ul className="mt-7 space-y-5 text-sm">
-              {[
-                { tier: "Solo", price: "$19" },
-                { tier: "Pro", price: "$39" },
-                { tier: "Team", price: "$79" },
-              ].map((row) => (
-                <li
-                  key={row.tier}
-                  className="flex items-baseline justify-between border-b border-border pb-4 last:border-0"
-                >
-                  <span className="text-text">{row.tier}</span>
-                  <span className="font-mono-data text-text">
-                    {row.price}
-                    <span className="text-text-dim">/mo</span>
+        <div className="mx-auto mt-14 grid max-w-7xl gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {PRICING_TIERS.map((tier) => (
+            <div
+              key={tier.key}
+              className={
+                tier.featured
+                  ? "screenshot-frame relative flex flex-col rounded-2xl p-7"
+                  : "relative flex flex-col rounded-2xl border border-border bg-surface/40 p-7"
+              }
+            >
+              {tier.badge && (
+                <div className="absolute -top-3 left-7">
+                  <span className="rounded-full bg-blue-primary px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white">
+                    {tier.badge}
                   </span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-8 text-sm leading-relaxed">
-              Founder Beta members keep their{" "}
-              <span className="text-text font-medium">$10/month</span> rate while
-              subscribed — even after public launch.
-            </p>
-          </div>
+                </div>
+              )}
+              <div className="mt-2">
+                <p className="text-sm font-medium uppercase tracking-wider text-text-dim">
+                  {tier.name}
+                </p>
+                <div className="mt-3 flex items-baseline gap-1.5">
+                  <span className="text-5xl font-semibold tracking-tight text-text">
+                    ${tier.price}
+                  </span>
+                  <span className="text-text-muted">/ month</span>
+                </div>
+                <p className="mt-3 text-sm text-text-muted">{tier.blurb}</p>
+              </div>
+              <ul className="mt-6 flex-1 space-y-3 text-sm text-text-muted">
+                {tier.bullets.map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <PrimaryCta
+                href={tier.link}
+                className="mt-7 w-full px-5 py-3 text-[14px]"
+              >
+                {tier.cta}
+                <ArrowRight className="h-4 w-4" />
+              </PrimaryCta>
+            </div>
+          ))}
         </div>
+        <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-text-dim">
+          After paying, you&rsquo;ll be redirected to a short onboarding form so
+          we can set up your account.
+        </p>
       </div>
     </section>
   );
@@ -520,12 +602,12 @@ function FinalCta() {
           <span className="text-gradient-blue">Start tracking them.</span>
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-base text-text-muted md:text-lg">
-          Join Founder Beta and get full access today — locked in at $10/month
+          Join Founder Beta and get full access today — locked in at $20/month
           for as long as you stay subscribed.
         </p>
         <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <PrimaryCta className="px-7 py-4 text-base">
-            Join Founder Beta — $10/month
+            Join Founder Beta — $20/month
             <ArrowRight className="h-4 w-4" />
           </PrimaryCta>
           <Link

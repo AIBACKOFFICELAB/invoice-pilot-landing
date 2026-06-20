@@ -556,9 +556,26 @@ function Footer() {
             INVOICE PILOT <span className="text-blue-highlight">PRO</span>
           </span>
         </div>
-        <p className="text-sm text-text-dim">
-          Built by people who run service businesses. © {new Date().getFullYear()} Invoice Pilot Pro.
-        </p>
+        <div className="flex flex-col gap-2 text-sm text-text-dim md:items-end">
+          <p>
+            Invoice Pilot Pro is a product of 6 Star Service.
+          </p>
+          <p>
+            Contact:{" "}
+            <a href="mailto:6starservice6@gmail.com" className="hover:text-text">
+              6starservice6@gmail.com
+            </a>
+          </p>
+          <div className="flex items-center gap-4">
+            <Link href="/privacy" className="hover:text-text">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-text">
+              Terms of Service
+            </Link>
+          </div>
+          <p>© {new Date().getFullYear()} 6 Star Service. All rights reserved.</p>
+        </div>
       </div>
     </footer>
   );

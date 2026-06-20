@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   description:
     "Invoice Pilot Pro helps contractors, plumbers, HVAC companies, electricians, handymen, and freelancers create professional invoices, track payments, and stay organized — without the complexity of QuickBooks. Founder Beta now open.",
   metadataBase: new URL("https://invoicepilotpro.com"),
+  applicationName: "Invoice Pilot Pro",
+  authors: [{ name: "6 Star Service" }],
+  creator: "6 Star Service",
+  publisher: "6 Star Service",
   openGraph: {
     title: "Invoice Pilot Pro — Get Paid Faster Without Chasing Customers",
     description:

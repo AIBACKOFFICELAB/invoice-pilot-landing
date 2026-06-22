@@ -14,49 +14,33 @@ import {
   Hammer,
   ArrowRight,
   ShieldCheck,
+  QrCode,
+  Clock,
+  Lock,
 } from "lucide-react";
+import { Nav } from "./components/nav";
 
-// === CONFIGURATION ===
-// Paste the real Stripe Payment Link for each tier before going live.
-// On each Stripe Payment Link, set the "After payment → Redirect" to FORM_LINK
-// so the customer is sent straight to the beta onboarding form after paying.
-const PLANS = {
-  founder: {
-    name: "Beta Founder",
-    price: 20,
-    link: "https://buy.stripe.com/REPLACE_WITH_FOUNDER_LINK",
-  },
-  solo: {
-    name: "Solo",
-    price: 35,
-    link: "https://buy.stripe.com/REPLACE_WITH_SOLO_LINK",
-  },
-  pro: {
-    name: "Pro",
-    price: 50,
-    link: "https://buy.stripe.com/REPLACE_WITH_PRO_LINK",
-  },
-  team: {
-    name: "Team",
-    price: 80,
-    link: "https://buy.stripe.com/REPLACE_WITH_TEAM_LINK",
-  },
-} as const;
-
-// Default CTA target (Beta Founder tier) — used by the hero / nav / final CTA.
-const STRIPE_PAYMENT_LINK = PLANS.founder.link;
-
-// Beta onboarding form (Google Form). Also used as the post-payment redirect
-// configured inside each Stripe Payment Link.
+// ─── CONFIGURATION ────────────────────────────────────────────────────────────
+//
+//  BEFORE YOU GO LIVE — replace every REPLACE_WITH_* value below:
+//
+//  1. STRIPE_FOUNDER_LINK  → Paste your real Stripe Payment Link for the
+//                            $20/month Founder Beta tier.
+//                            In Stripe: set "After payment → Redirect" to
+//                            your Google Form URL so customers land on
+//                            onboarding automatically after paying.
+//
+//  2. FORM_LINK            → Paste your real Google Form URL.
+//                            Also update the form: Question 11 currently
+//                            says "$10/month" — change it to "$20/month"
+//                            so it matches what customers just paid.
+//
+//  Everything else on the page is live and ready.
+//
+const STRIPE_FOUNDER_LINK = "https://buy.stripe.com/REPLACE_WITH_FOUNDER_LINK";
 const FORM_LINK = "https://forms.gle/REPLACE_WITH_YOUR_FORM";
 
-// === CONTENT ===
-const NAV_LINKS = [
-  { href: "#live", label: "What's Live" },
-  { href: "#roadmap", label: "Roadmap" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#faq", label: "FAQ" },
-];
+// ─── CONTENT ──────────────────────────────────────────────────────────────────
 
 const LIVE_TODAY_ITEMS = [
   { icon: FileText, label: "Invoicing" },
@@ -122,7 +106,7 @@ const FAQ = [
   },
   {
     q: "What does '$20/month, locked while subscribed' mean?",
-    a: "As long as you stay subscribed to Founder Beta, your price stays $20/month — even after the product moves to standard pricing (Solo, Pro, Team tiers) for new customers. If you ever cancel and rejoin later, you'd rejoin at the then-current price.",
+    a: "As long as you stay subscribed to Founder Beta, your price stays $20/month — even after the product moves to standard pricing (Solo $35, Pro $50, Team $80) for new customers. If you ever cancel and rejoin later, you'd rejoin at the then-current price.",
   },
   {
     q: "Is this a replacement for QuickBooks or my accountant?",
@@ -132,31 +116,27 @@ const FAQ = [
     q: "What does 'beta' actually mean here?",
     a: "It means real, but early. You'll get full access to everything listed under What's Live, you may hit the occasional rough edge, and your feedback directly shapes what we build next.",
   },
+  {
+    q: "What happens after I pay?",
+    a: "Right after checkout you'll be redirected to a short onboarding form. We'll review it and reach out within 24 hours — usually same day — to get your account set up personally.",
+  },
 ];
 
-// === COMPONENTS ===
+// ─── SHARED COMPONENTS ────────────────────────────────────────────────────────
 
-function Logo({ className = "" }: { className?: string }) {
+function FounderBadge() {
   return (
-    <Link href="/" className={`flex items-center gap-3 ${className}`}>
-      <Image
-        src="/logo-nav.png"
-        alt="Invoice Pilot Pro"
-        width={36}
-        height={36}
-        className="h-9 w-9"
-        priority
-      />
-      <span className="text-[15px] font-semibold tracking-[0.18em] text-text">
-        INVOICE PILOT <span className="text-blue-highlight">PRO</span>
-      </span>
-    </Link>
+    <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border-strong)] bg-[var(--surface)]/60 px-3.5 py-1.5 text-xs font-medium tracking-wide text-[var(--text-muted)] backdrop-blur">
+      <Rocket className="h-3.5 w-3.5 text-[var(--blue-highlight)]" />
+      <span className="text-[var(--text)]">FOUNDER BETA</span>
+      <span className="text-[var(--text-muted)]">NOW OPEN</span>
+    </span>
   );
 }
 
 function PrimaryCta({
   children = "Join Founder Beta — $20/month",
-  href = STRIPE_PAYMENT_LINK,
+  href = STRIPE_FOUNDER_LINK,
   className = "",
 }: {
   children?: React.ReactNode;
@@ -164,48 +144,16 @@ function PrimaryCta({
   className?: string;
 }) {
   return (
-    <Link
+    <a
       href={href}
-      className={`btn-primary inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-highlight ${className}`}
+      className={`btn-primary inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-highlight)] ${className}`}
     >
       {children}
-    </Link>
+    </a>
   );
 }
 
-function Nav() {
-  return (
-    <header className="nav-blur sticky top-0 z-50">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <Logo />
-        <nav className="hidden items-center gap-9 text-sm text-text-muted md:flex">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="transition-colors hover:text-text"
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
-        <PrimaryCta className="px-4 py-2 text-[13px]">
-          Join Founder Beta — $20/month
-        </PrimaryCta>
-      </div>
-    </header>
-  );
-}
-
-function FounderBadge() {
-  return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-border-strong bg-surface/60 px-3.5 py-1.5 text-xs font-medium tracking-wide text-text-muted backdrop-blur">
-      <Rocket className="h-3.5 w-3.5 text-blue-highlight" />
-      <span className="text-text">FOUNDER BETA</span>
-      <span className="text-text-muted">NOW OPEN</span>
-    </span>
-  );
-}
+// ─── SECTIONS ─────────────────────────────────────────────────────────────────
 
 function ProductScreenshot() {
   return (
@@ -214,15 +162,15 @@ function ProductScreenshot() {
       <div className="screenshot-frame relative z-10 overflow-hidden rounded-2xl p-2">
         <Image
           src="/dashboard-screenshot.png"
-          alt="Invoice Pilot Pro product dashboard showing an invoice detail view"
+          alt="Invoice Pilot Pro product dashboard showing invoice detail view, customer list, and payment status"
           width={1200}
           height={760}
           className="w-full rounded-xl"
           priority
         />
       </div>
-      <div className="relative z-10 mt-4 flex items-center justify-center gap-2 text-xs text-text-muted">
-        <ShieldCheck className="h-3.5 w-3.5 text-success" />
+      <div className="relative z-10 mt-4 flex items-center justify-center gap-2 text-xs text-[var(--text-muted)]">
+        <ShieldCheck className="h-3.5 w-3.5 text-[var(--success)]" />
         Real product screenshot — customer details blurred for privacy
       </div>
     </div>
@@ -242,7 +190,7 @@ function Hero() {
             <br />
             <span className="text-gradient-blue">customers.</span>
           </h1>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-text-muted md:text-lg">
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-[var(--text-muted)] md:text-lg">
             Invoice Pilot Pro helps contractors, plumbers, HVAC companies,
             electricians, handymen, and freelancers create professional invoices,
             track payments, and stay organized — without the complexity of
@@ -253,26 +201,26 @@ function Hero() {
               Join Founder Beta — $20/month
               <ArrowRight className="h-4 w-4" />
             </PrimaryCta>
-            <div className="flex items-center gap-2 text-sm text-text-muted">
-              <CheckCircle2 className="h-4 w-4 text-success" />
+            <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
+              <CheckCircle2 className="h-4 w-4 text-[var(--success)]" />
               <span>
                 Locked pricing while subscribed.{" "}
-                <span className="text-text-dim">Limited spots.</span>
+                <span className="text-[var(--text-dim)]">Limited spots.</span>
               </span>
             </div>
           </div>
 
           {/* Live today inline strip */}
           <div className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-3 text-[13px]">
-            <span className="font-mono-data text-xs tracking-[0.2em] text-text-dim">
+            <span className="font-mono-data text-xs tracking-[0.2em] text-[var(--text-dim)]">
               LIVE TODAY:
             </span>
             {LIVE_TODAY_ITEMS.map(({ icon: Icon, label }) => (
               <span
                 key={label}
-                className="flex items-center gap-1.5 text-text-muted"
+                className="flex items-center gap-1.5 text-[var(--text-muted)]"
               >
-                <Icon className="h-4 w-4 text-blue-highlight" />
+                <Icon className="h-4 w-4 text-[var(--blue-highlight)]" />
                 {label}
               </span>
             ))}
@@ -289,18 +237,18 @@ function Hero() {
 
 function TrustStrip() {
   return (
-    <section className="border-y border-border bg-bg-secondary/40">
+    <section className="border-y border-[var(--border)] bg-[var(--bg-secondary)]/40">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-8 gap-y-6 px-6 py-8">
-        <span className="font-mono-data text-xs tracking-[0.22em] text-text-dim">
-          TRUSTED BY CONTRACTORS IN:
+        <span className="font-mono-data text-xs tracking-[0.22em] text-[var(--text-dim)]">
+          BUILT FOR:
         </span>
         <div className="flex flex-wrap items-center gap-x-9 gap-y-4">
           {TRADES.map(({ icon: Icon, label }) => (
             <div
               key={label}
-              className="flex items-center gap-2.5 text-sm text-text-muted"
+              className="flex items-center gap-2.5 text-sm text-[var(--text-muted)]"
             >
-              <Icon className="h-4 w-4 text-blue-highlight" strokeWidth={1.75} />
+              <Icon className="h-4 w-4 text-[var(--blue-highlight)]" strokeWidth={1.75} />
               <span className="uppercase tracking-wider">{label}</span>
             </div>
           ))}
@@ -315,12 +263,16 @@ function Features() {
     <section id="live" className="relative">
       <div className="mx-auto max-w-7xl px-6 py-24">
         <div className="text-center">
-          <p className="font-mono-data text-xs tracking-[0.22em] text-blue-highlight">
+          <p className="font-mono-data text-xs tracking-[0.22em] text-[var(--blue-highlight)]">
             BUILT FOR CONTRACTORS
           </p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-[40px]">
             Everything you need to run your business.
           </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-[var(--text-muted)]">
+            No bookkeeping degree required. No bloat. Just the tools you need
+            to create invoices, track payments, and know who owes you money.
+          </p>
         </div>
         <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
           {FEATURES.map(({ icon: Icon, title, body }) => (
@@ -328,11 +280,11 @@ function Features() {
               key={title}
               className="feature-card group rounded-2xl p-6"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-primary/10 ring-1 ring-inset ring-blue-primary/20 transition-all group-hover:bg-blue-primary/15 group-hover:ring-blue-primary/30">
-                <Icon className="h-5 w-5 text-blue-highlight" strokeWidth={1.8} />
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--blue-primary)]/10 ring-1 ring-inset ring-[var(--blue-primary)]/20 transition-all group-hover:bg-[var(--blue-primary)]/15 group-hover:ring-[var(--blue-primary)]/30">
+                <Icon className="h-5 w-5 text-[var(--blue-highlight)]" strokeWidth={1.8} />
               </div>
-              <h3 className="mt-5 text-[17px] font-semibold text-text">{title}</h3>
-              <p className="mt-2.5 text-[14px] leading-relaxed text-text-muted">
+              <h3 className="mt-5 text-[17px] font-semibold text-[var(--text)]">{title}</h3>
+              <p className="mt-2.5 text-[14px] leading-relaxed text-[var(--text-muted)]">
                 {body}
               </p>
             </article>
@@ -345,42 +297,48 @@ function Features() {
 
 function FounderExplainer() {
   return (
-    <section className="border-y border-border bg-bg-secondary/40">
+    <section className="border-y border-[var(--border)] bg-[var(--bg-secondary)]/40">
       <div className="mx-auto max-w-7xl px-6 py-20">
         <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-start">
           <div>
-            <p className="font-mono-data text-xs tracking-[0.22em] text-blue-highlight">
+            <p className="font-mono-data text-xs tracking-[0.22em] text-[var(--blue-highlight)]">
               FOUNDER BETA
             </p>
             <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tight md:text-[40px]">
-              You&rsquo;re not joining a waitlist. You&rsquo;re joining the build.
+              You&rsquo;re not joining a waitlist.
+              <br />
+              You&rsquo;re joining the build.
             </h2>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-text-muted">
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-[var(--text-muted)]">
               Founder Beta members get full access to everything live today, lock
               in $20/month for as long as they stay subscribed, and shape what we
-              build next.
+              build next. Standard pricing starts at $35/month after beta — this
+              is the only time to get in at $20.
             </p>
           </div>
           <ul className="space-y-5">
             {[
               {
+                icon: Lock,
                 title: "$20/month, locked while subscribed",
-                body: "Even as new customers pay standard pricing later.",
+                body: "Standard pricing starts at $35/month for new customers after beta ends.",
               },
               {
-                title: "Every beta feature, no extra cost",
-                body: "Roadmap items ship to you automatically.",
+                icon: Rocket,
+                title: "Every roadmap feature, at no extra cost",
+                body: "Deposits, payments, automations — every item ships to you the moment it's live.",
               },
               {
+                icon: CheckCircle2,
                 title: "Direct influence on the roadmap",
-                body: "Your feedback goes straight to the build.",
+                body: "Your feedback goes straight to the build. What you ask for, we build next.",
               },
             ].map((item) => (
               <li key={item.title} className="flex gap-4">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-success" />
+                <item.icon className="mt-0.5 h-5 w-5 shrink-0 text-[var(--success)]" />
                 <div>
-                  <p className="font-medium text-text">{item.title}</p>
-                  <p className="mt-1 text-sm text-text-muted">{item.body}</p>
+                  <p className="font-medium text-[var(--text)]">{item.title}</p>
+                  <p className="mt-1 text-sm text-[var(--text-muted)]">{item.body}</p>
                 </div>
               </li>
             ))}
@@ -396,25 +354,25 @@ function Roadmap() {
     <section id="roadmap" className="relative">
       <div className="mx-auto max-w-7xl px-6 py-24">
         <div className="max-w-2xl">
-          <p className="font-mono-data text-xs tracking-[0.22em] text-blue-highlight">
+          <p className="font-mono-data text-xs tracking-[0.22em] text-[var(--blue-highlight)]">
             ROADMAP
           </p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-[40px]">
             Coming next, included in Founder Beta.
           </h2>
-          <p className="mt-5 text-base leading-relaxed text-text-muted">
-            Not live yet. Founder Beta members get every one of these the moment
-            it ships — no extra cost, no re-signup.
+          <p className="mt-5 text-base leading-relaxed text-[var(--text-muted)]">
+            Not live yet — but Founder Beta members get every one of these the
+            moment it ships, at no extra cost, no re-signup required.
           </p>
         </div>
         <ul className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {ROADMAP.map((item) => (
             <li
               key={item}
-              className="feature-card flex items-start gap-3 rounded-xl border-dashed p-4 text-sm text-text-muted"
+              className="feature-card flex items-start gap-3 rounded-xl border-dashed p-4 text-sm text-[var(--text-muted)]"
             >
               <span
-                className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-highlight"
+                className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--blue-highlight)]"
                 aria-hidden="true"
               />
               {item}
@@ -426,133 +384,140 @@ function Roadmap() {
   );
 }
 
-const PRICING_TIERS = [
-  {
-    key: "founder" as const,
-    name: PLANS.founder.name,
-    price: PLANS.founder.price,
-    link: PLANS.founder.link,
-    badge: "Founder Beta",
-    featured: true,
-    blurb: "Locked in for as long as you stay subscribed. Limited spots.",
-    bullets: [
-      "Everything under What's Live today",
-      "Every roadmap feature, the moment it ships",
-      "Direct say in what we build next",
-      "Priority onboarding & support",
-    ],
-    cta: `Join Founder Beta — $${PLANS.founder.price}/month`,
-  },
-  {
-    key: "solo" as const,
-    name: PLANS.solo.name,
-    price: PLANS.solo.price,
-    link: PLANS.solo.link,
-    blurb: "For one-person shops running their own jobs.",
-    bullets: [
-      "Everything in Founder Beta",
-      "Unlimited invoices & customers",
-      "Email support",
-    ],
-    cta: `Start Solo — $${PLANS.solo.price}/month`,
-  },
-  {
-    key: "pro" as const,
-    name: PLANS.pro.name,
-    price: PLANS.pro.price,
-    link: PLANS.pro.link,
-    blurb: "For growing operators ready to scale.",
-    bullets: [
-      "Everything in Solo",
-      "Deposits & partial payments",
-      "Automated follow-ups",
-      "Priority support",
-    ],
-    cta: `Start Pro — $${PLANS.pro.price}/month`,
-  },
-  {
-    key: "team" as const,
-    name: PLANS.team.name,
-    price: PLANS.team.price,
-    link: PLANS.team.link,
-    blurb: "For crews with multiple users on the road.",
-    bullets: [
-      "Everything in Pro",
-      "Multi-user access",
-      "Team roles & permissions",
-      "Dedicated onboarding",
-    ],
-    cta: `Start Team — $${PLANS.team.price}/month`,
-  },
-];
-
+// Pricing — Founder Beta featured prominently. Future tiers shown as preview only
+// (disabled) to demonstrate value of locking in early. This eliminates all dead
+// Stripe link exposure on the pricing page.
 function Pricing() {
+  const futureTiers = [
+    {
+      name: "Solo",
+      price: 35,
+      bullets: ["Unlimited invoices & customers", "Email support", "All live features"],
+    },
+    {
+      name: "Pro",
+      price: 50,
+      bullets: ["Everything in Solo", "Deposits & partial payments", "Automated follow-ups", "Priority support"],
+    },
+    {
+      name: "Team",
+      price: 80,
+      bullets: ["Everything in Pro", "Multi-user access", "Team roles & permissions", "Dedicated onboarding"],
+    },
+  ];
+
   return (
-    <section id="pricing" className="border-t border-border bg-bg-secondary/40">
+    <section id="pricing" className="border-t border-[var(--border)] bg-[var(--bg-secondary)]/40">
       <div className="mx-auto max-w-7xl px-6 py-24">
         <div className="text-center">
-          <p className="font-mono-data text-xs tracking-[0.22em] text-blue-highlight">
+          <p className="font-mono-data text-xs tracking-[0.22em] text-[var(--blue-highlight)]">
             PRICING
           </p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-[40px]">
-            Beta onboarding plans.
+            One offer. Simple.
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-text-muted">
-            Pick the tier that fits your shop. Founder Beta locks in $
-            {PLANS.founder.price}/month for as long as you stay subscribed.
+          <p className="mx-auto mt-4 max-w-2xl text-[var(--text-muted)]">
+            Founder Beta locks in $20/month for as long as you stay subscribed
+            — before standard plans go live at $35–$80/month.
           </p>
         </div>
-        <div className="mx-auto mt-14 grid max-w-7xl gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {PRICING_TIERS.map((tier) => (
-            <div
-              key={tier.key}
-              className={
-                tier.featured
-                  ? "screenshot-frame relative flex flex-col rounded-2xl p-7"
-                  : "relative flex flex-col rounded-2xl border border-border bg-surface/40 p-7"
-              }
+
+        {/* Featured Founder Beta card */}
+        <div className="mx-auto mt-14 max-w-lg">
+          <div className="screenshot-frame relative flex flex-col rounded-2xl p-8">
+            <div className="absolute -top-3.5 left-8">
+              <span className="rounded-full bg-[var(--blue-primary)] px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white">
+                Founder Beta — Limited Spots
+              </span>
+            </div>
+            <div className="mt-2">
+              <p className="text-sm font-medium uppercase tracking-wider text-[var(--text-dim)]">
+                Beta Founder
+              </p>
+              <div className="mt-3 flex items-baseline gap-1.5">
+                <span className="text-6xl font-semibold tracking-tight text-[var(--text)]">
+                  $20
+                </span>
+                <span className="text-[var(--text-muted)]">/ month</span>
+                <span className="ml-2 rounded-full bg-[var(--success)]/15 px-2.5 py-0.5 text-xs font-medium text-[var(--success)]">
+                  Locked while subscribed
+                </span>
+              </div>
+              <p className="mt-3 text-sm text-[var(--text-muted)]">
+                Full access to everything live today, plus every roadmap feature
+                the moment it ships — at the founder price, forever.
+              </p>
+            </div>
+            <ul className="mt-7 space-y-3.5 text-sm text-[var(--text-muted)]">
+              {[
+                "Everything under What's Live today",
+                "Every roadmap feature, the moment it ships",
+                "Direct say in what we build next",
+                "Priority onboarding & personal setup",
+                "$20/month locked — even as pricing rises",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--success)]" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <PrimaryCta
+              href={STRIPE_FOUNDER_LINK}
+              className="mt-8 w-full px-5 py-4 text-[15px]"
             >
-              {tier.badge && (
-                <div className="absolute -top-3 left-7">
-                  <span className="rounded-full bg-blue-primary px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white">
-                    {tier.badge}
+              Join Founder Beta — $20/month
+              <ArrowRight className="h-4 w-4" />
+            </PrimaryCta>
+            <p className="mt-4 text-center text-xs text-[var(--text-dim)]">
+              After paying, you&rsquo;ll be redirected to a short onboarding form.
+              We&rsquo;ll reach out within 24 hours.
+            </p>
+          </div>
+        </div>
+
+        {/* Future tiers preview (disabled) */}
+        <div className="mx-auto mt-16 max-w-4xl">
+          <p className="mb-6 text-center text-sm font-medium tracking-wider text-[var(--text-dim)]">
+            STANDARD PRICING AFTER BETA
+          </p>
+          <div className="grid gap-4 sm:grid-cols-3">
+            {futureTiers.map((tier) => (
+              <div
+                key={tier.name}
+                className="relative flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--surface)]/20 p-6 opacity-50"
+                aria-label={`${tier.name} plan — coming post-beta`}
+              >
+                <div className="absolute -top-3 left-5">
+                  <span className="rounded-full border border-[var(--border-strong)] bg-[var(--bg-primary)] px-2.5 py-0.5 text-[10px] font-medium tracking-wider text-[var(--text-dim)]">
+                    COMING POST-BETA
                   </span>
                 </div>
-              )}
-              <div className="mt-2">
-                <p className="text-sm font-medium uppercase tracking-wider text-text-dim">
+                <p className="mt-2 text-sm font-medium uppercase tracking-wider text-[var(--text-dim)]">
                   {tier.name}
                 </p>
-                <div className="mt-3 flex items-baseline gap-1.5">
-                  <span className="text-5xl font-semibold tracking-tight text-text">
-                    ${tier.price}
-                  </span>
-                  <span className="text-text-muted">/ month</span>
+                <div className="mt-2 flex items-baseline gap-1">
+                  <span className="text-3xl font-semibold text-[var(--text)]">${tier.price}</span>
+                  <span className="text-sm text-[var(--text-muted)]">/mo</span>
                 </div>
-                <p className="mt-3 text-sm text-text-muted">{tier.blurb}</p>
+                <ul className="mt-4 space-y-2 text-xs text-[var(--text-dim)]">
+                  {tier.bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-2">
+                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[var(--text-dim)]" aria-hidden="true" />
+                      {b}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="mt-6 flex-1 space-y-3 text-sm text-text-muted">
-                {tier.bullets.map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <PrimaryCta
-                href={tier.link}
-                className="mt-7 w-full px-5 py-3 text-[14px]"
-              >
-                {tier.cta}
-                <ArrowRight className="h-4 w-4" />
-              </PrimaryCta>
-            </div>
-          ))}
+            ))}
+          </div>
+          <p className="mt-6 text-center text-sm text-[var(--text-dim)]">
+            Founder Beta locks in $20/month — that&rsquo;s{" "}
+            <span className="text-[var(--text-muted)]">43% less than Solo</span>{" "}
+            and{" "}
+            <span className="text-[var(--text-muted)]">75% less than Team</span>.
+          </p>
         </div>
-        <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-text-dim">
-          After paying, you&rsquo;ll be redirected to a short onboarding form so
-          we can set up your account.
-        </p>
       </div>
     </section>
   );
@@ -563,23 +528,23 @@ function Faq() {
     <section id="faq" className="relative">
       <div className="mx-auto max-w-3xl px-6 py-24">
         <div className="text-center">
-          <p className="font-mono-data text-xs tracking-[0.22em] text-blue-highlight">
+          <p className="font-mono-data text-xs tracking-[0.22em] text-[var(--blue-highlight)]">
             FAQ
           </p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-[40px]">
             Straight answers.
           </h2>
         </div>
-        <div className="mt-12 divide-y divide-border rounded-2xl border border-border bg-surface/40">
+        <div className="mt-12 divide-y divide-[var(--border)] rounded-2xl border border-[var(--border)] bg-[var(--surface)]/40">
           {FAQ.map((item) => (
             <details key={item.q} className="group px-6 py-5">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-[15px] font-medium text-text">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-[15px] font-medium text-[var(--text)]">
                 {item.q}
-                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full border border-border text-text-muted transition-all group-open:rotate-45 group-open:border-blue-highlight group-open:text-blue-highlight">
+                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full border border-[var(--border)] text-[var(--text-muted)] transition-all group-open:rotate-45 group-open:border-[var(--blue-highlight)] group-open:text-[var(--blue-highlight)]">
                   +
                 </span>
               </summary>
-              <p className="mt-4 text-[14px] leading-relaxed text-text-muted">
+              <p className="mt-4 text-[14px] leading-relaxed text-[var(--text-muted)]">
                 {item.a}
               </p>
             </details>
@@ -590,10 +555,62 @@ function Faq() {
   );
 }
 
+function QrSection() {
+  return (
+    <section className="border-t border-[var(--border)] bg-[var(--bg-secondary)]/40">
+      <div className="mx-auto max-w-4xl px-6 py-16">
+        <div className="flex flex-col items-center gap-10 md:flex-row md:items-center md:gap-16">
+          <div className="shrink-0">
+            <div className="screenshot-frame rounded-2xl p-3">
+              <Image
+                src="/qr.png"
+                alt="QR code to join Invoice Pilot Pro Founder Beta"
+                width={160}
+                height={160}
+                className="h-40 w-40 rounded-xl"
+              />
+            </div>
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <QrCode className="h-4 w-4 text-[var(--blue-highlight)]" />
+              <p className="font-mono-data text-xs tracking-[0.22em] text-[var(--blue-highlight)]">
+                SHARE AT THE JOB SITE
+              </p>
+            </div>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">
+              Know another contractor
+              <br />
+              who needs to get paid faster?
+            </h2>
+            <p className="mt-3 text-base text-[var(--text-muted)]">
+              Scan the QR code to open this page. Works great for sharing on
+              Instagram, at trade shows, and in group chats.
+            </p>
+            <div className="mt-5 flex flex-wrap items-center gap-4">
+              <a
+                href={STRIPE_FOUNDER_LINK}
+                className="btn-primary inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium"
+              >
+                Join now — $20/month
+                <ArrowRight className="h-4 w-4" />
+              </a>
+              <div className="flex items-center gap-2 text-sm text-[var(--text-dim)]">
+                <Clock className="h-4 w-4" />
+                Setup takes under 5 minutes
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FinalCta() {
   return (
-    <section className="relative overflow-hidden border-t border-border">
-      <div className="absolute inset-x-0 top-0 -z-0 h-px bg-gradient-to-r from-transparent via-blue-highlight/60 to-transparent" />
+    <section className="relative overflow-hidden border-t border-[var(--border)]">
+      <div className="absolute inset-x-0 top-0 -z-0 h-px bg-gradient-to-r from-transparent via-[var(--blue-highlight)]/60 to-transparent" />
       <div className="mx-auto max-w-4xl px-6 py-24 text-center">
         <FounderBadge />
         <h2 className="mt-7 text-3xl font-semibold leading-tight tracking-tight md:text-5xl">
@@ -601,21 +618,34 @@ function FinalCta() {
           <br />
           <span className="text-gradient-blue">Start tracking them.</span>
         </h2>
-        <p className="mx-auto mt-6 max-w-xl text-base text-text-muted md:text-lg">
+        <p className="mx-auto mt-6 max-w-xl text-base text-[var(--text-muted)] md:text-lg">
           Join Founder Beta and get full access today — locked in at $20/month
-          for as long as you stay subscribed.
+          for as long as you stay subscribed. Standard pricing starts at
+          $35/month after beta.
         </p>
         <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <PrimaryCta className="px-7 py-4 text-base">
             Join Founder Beta — $20/month
             <ArrowRight className="h-4 w-4" />
           </PrimaryCta>
-          <Link
+          <a
             href={FORM_LINK}
-            className="text-sm text-text-muted underline-offset-4 transition hover:text-text hover:underline"
+            className="text-sm text-[var(--text-muted)] underline-offset-4 transition hover:text-[var(--text)] hover:underline"
           >
             Or apply with a quick form →
-          </Link>
+          </a>
+        </div>
+        <div className="mx-auto mt-10 grid max-w-sm grid-cols-3 gap-4 text-center">
+          {[
+            { label: "Live today", sub: "No waitlist" },
+            { label: "$20/month", sub: "Locked in" },
+            { label: "24 hr", sub: "Onboarding" },
+          ].map(({ label, sub }) => (
+            <div key={label} className="rounded-xl border border-[var(--border)] bg-[var(--surface)]/40 p-3">
+              <p className="text-lg font-semibold text-[var(--text)]">{label}</p>
+              <p className="mt-0.5 text-xs text-[var(--text-dim)]">{sub}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -624,7 +654,7 @@ function FinalCta() {
 
 function Footer() {
   return (
-    <footer className="border-t border-border">
+    <footer className="border-t border-[var(--border)]">
       <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-6 py-12 md:flex-row md:items-center">
         <div className="flex items-center gap-3">
           <Image
@@ -634,25 +664,23 @@ function Footer() {
             height={28}
             className="h-7 w-7"
           />
-          <span className="text-sm font-medium tracking-wider text-text">
-            INVOICE PILOT <span className="text-blue-highlight">PRO</span>
+          <span className="text-sm font-medium tracking-wider text-[var(--text)]">
+            INVOICE PILOT <span className="text-[var(--blue-highlight)]">PRO</span>
           </span>
         </div>
-        <div className="flex flex-col gap-2 text-sm text-text-dim md:items-end">
-          <p>
-            Invoice Pilot Pro is a product of 6 Star Service.
-          </p>
+        <div className="flex flex-col gap-2 text-sm text-[var(--text-dim)] md:items-end">
+          <p>Invoice Pilot Pro is a product of 6 Star Service.</p>
           <p>
             Contact:{" "}
-            <a href="mailto:6starservice6@gmail.com" className="hover:text-text">
+            <a href="mailto:6starservice6@gmail.com" className="hover:text-[var(--text)]">
               6starservice6@gmail.com
             </a>
           </p>
           <div className="flex items-center gap-4">
-            <Link href="/privacy" className="hover:text-text">
+            <Link href="/privacy" className="hover:text-[var(--text)]">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:text-text">
+            <Link href="/terms" className="hover:text-[var(--text)]">
               Terms of Service
             </Link>
           </div>
@@ -663,11 +691,12 @@ function Footer() {
   );
 }
 
-// === PAGE ===
+// ─── PAGE ─────────────────────────────────────────────────────────────────────
+
 export default function Home() {
   return (
     <>
-      <Nav />
+      <Nav ctaHref={STRIPE_FOUNDER_LINK} />
       <main>
         <Hero />
         <TrustStrip />
@@ -676,6 +705,7 @@ export default function Home() {
         <Roadmap />
         <Pricing />
         <Faq />
+        <QrSection />
         <FinalCta />
       </main>
       <Footer />

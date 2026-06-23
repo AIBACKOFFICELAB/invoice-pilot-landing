@@ -21,24 +21,12 @@ import {
 import { Nav } from "./components/nav";
 
 // ─── CONFIGURATION ────────────────────────────────────────────────────────────
-//
-//  BEFORE YOU GO LIVE — replace every REPLACE_WITH_* value below:
-//
-//  1. STRIPE_FOUNDER_LINK  → Paste your real Stripe Payment Link for the
-//                            $20/month Founder Beta tier.
-//                            In Stripe: set "After payment → Redirect" to
-//                            your Google Form URL so customers land on
-//                            onboarding automatically after paying.
-//
-//  2. FORM_LINK            → Paste your real Google Form URL.
-//                            Also update the form: Question 11 currently
-//                            says "$10/month" — change it to "$20/month"
-//                            so it matches what customers just paid.
-//
-//  Everything else on the page is live and ready.
-//
-const STRIPE_FOUNDER_LINK = "https://buy.stripe.com/REPLACE_WITH_FOUNDER_LINK";
-const FORM_LINK = "https://forms.gle/REPLACE_WITH_YOUR_FORM";
+// Stripe Payment Link — Founder Beta $20/month
+// In Stripe: "After payment → Redirect" is set to FORM_LINK for seamless onboarding.
+const STRIPE_FOUNDER_LINK = "https://buy.stripe.com/28EbIT7cpgI4eal9PBbQY00";
+
+// Beta onboarding form — Google Form
+const FORM_LINK = "https://docs.google.com/forms/d/e/1FAIpQLScfiuau6ECNdQrMpVd1IGCNJbqskYPLAMFxseJbPkkfPhEw6w/viewform?usp=header";
 
 // ─── CONTENT ──────────────────────────────────────────────────────────────────
 

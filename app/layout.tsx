@@ -50,10 +50,50 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: "/apple-touch-icon.png" }],
   },
+  alternates: {
+    canonical: "https://invoicepilotpro.app",
+  },
   other: {
     "theme-color": "#07111F",
     "msapplication-TileColor": "#07111F",
   },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Invoice Pilot Pro",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  description:
+    "Professional invoicing, customer management, and payment tracking for service businesses. Create invoices, track payments, and get paid faster without chasing customers.",
+  url: "https://invoicepilotpro.app",
+  image: "https://invoicepilotpro.app/og-image.png",
+  author: {
+    "@type": "Organization",
+    name: "6 Star Service",
+    url: "https://invoicepilotpro.app",
+  },
+  offers: {
+    "@type": "Offer",
+    price: "20",
+    priceCurrency: "USD",
+    description: "Founder Beta — $20/month locked while subscribed",
+    availability: "https://schema.org/InStock",
+  },
+  featureList: [
+    "Invoice creation and editing",
+    "Customer management",
+    "Stripe payment integration",
+    "Public invoice pages",
+    "Payment status tracking",
+    "PDF export",
+    "Reminder engine",
+    "Company branding and logo upload",
+    "Invoice timeline",
+    "Responsive dashboard",
+    "Secure cloud storage",
+  ],
 };
 
 export default function RootLayout({
@@ -61,6 +101,12 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className="h-full">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-full antialiased">{children}</body>
     </html>
   );

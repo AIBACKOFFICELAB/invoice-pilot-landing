@@ -3,19 +3,19 @@ import { MetadataRoute } from "next";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: "https://invoicepilotpro.com",
+      url: "https://invoicepilotpro.app",
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 1,
     },
     {
-      url: "https://invoicepilotpro.com/privacy",
+      url: "https://invoicepilotpro.app/privacy",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.3,
     },
     {
-      url: "https://invoicepilotpro.com/terms",
+      url: "https://invoicepilotpro.app/terms",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.3,

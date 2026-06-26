@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Menu, X, Rocket, ArrowRight } from "lucide-react";
 
 const NAV_LINKS = [
+  { href: "#demo", label: "Demo" },
   { href: "#live", label: "Features" },
   { href: "#roadmap", label: "Roadmap" },
   { href: "#pricing", label: "Pricing" },

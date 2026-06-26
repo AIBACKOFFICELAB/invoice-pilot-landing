@@ -8,15 +8,18 @@ import {
   Rocket,
   CheckCircle2,
   Wrench,
-  Wind,
-  Zap,
-  HardHat,
-  Hammer,
+  Laptop,
+  Briefcase,
+  Building2,
+  Palette,
+  Store,
   ArrowRight,
   ShieldCheck,
   QrCode,
   Clock,
   Lock,
+  Heart,
+  Play,
 } from "lucide-react";
 import { Nav } from "./components/nav";
 
@@ -26,23 +29,26 @@ import { Nav } from "./components/nav";
 const STRIPE_FOUNDER_LINK = "https://buy.stripe.com/28EbIT7cpgI4eal9PBbQY00";
 
 // Beta onboarding form — Google Form
-const FORM_LINK = "https://docs.google.com/forms/d/e/1FAIpQLScfiuau6ECNdQrMpVd1IGCNJbqskYPLAMFxseJbPkkfPhEw6w/viewform?usp=header";
+const FORM_LINK =
+  "https://docs.google.com/forms/d/e/1FAIpQLScfiuau6ECNdQrMpVd1IGCNJbqskYPLAMFxseJbPkkfPhEw6w/viewform?usp=header";
 
 // ─── CONTENT ──────────────────────────────────────────────────────────────────
 
 const LIVE_TODAY_ITEMS = [
   { icon: FileText, label: "Invoicing" },
   { icon: Users, label: "Customer management" },
-  { icon: CircleDollarSign, label: "Status tracking" },
+  { icon: CircleDollarSign, label: "Payment tracking" },
   { icon: LayoutDashboard, label: "Dashboard" },
 ];
 
 const TRADES = [
   { icon: Wrench, label: "Contractors" },
-  { icon: Wind, label: "Freelancers" },
-  { icon: Zap, label: "Consultants" },
-  { icon: HardHat, label: "Agencies" },
-  { icon: Hammer, label: "Service Businesses" },
+  { icon: Laptop, label: "Freelancers" },
+  { icon: Briefcase, label: "Consultants" },
+  { icon: Building2, label: "Agencies" },
+  { icon: Palette, label: "Creators" },
+  { icon: Store, label: "Small Businesses" },
+  { icon: Users, label: "Service Businesses" },
 ];
 
 const FEATURES = [
@@ -68,15 +74,37 @@ const FEATURES = [
   },
 ];
 
+// Everything below shipped across 12 development sprints and is live in the app today.
+const LIVE_CAPABILITIES = [
+  "Dashboard",
+  "Customers",
+  "Invoice creation",
+  "Invoice editing",
+  "Public invoice pages",
+  "Stripe payments",
+  "Payment status tracking",
+  "Company branding",
+  "Logo upload",
+  "Customer management",
+  "Reminder engine",
+  "Invoice timeline",
+  "PDF export",
+  "Authentication",
+  "Responsive dashboard",
+  "Secure cloud storage",
+];
+
+// True future work only — everything already shipped is in LIVE_CAPABILITIES above.
 const ROADMAP = [
-  "Deposits & partial payments",
-  "Online payments — card & bank via Stripe",
-  "Automatic payment reminders",
-  "Automated follow-up engine",
   "Voice-to-Invoice",
-  "Smart document extraction (IDP)",
-  "Reusable service catalog",
-  "Payment collection workflow",
+  "AI Follow-Up Agent",
+  "Intelligent Document Processing (IDP)",
+  "AI bookkeeping",
+  "Mobile apps (iOS & Android)",
+  "Analytics & advanced reporting",
+  "Recurring invoices",
+  "Team collaboration",
+  "Integrations",
 ];
 
 const FAQ = [
@@ -85,12 +113,12 @@ const FAQ = [
     a: "This is live. Founder Beta members get an account today and can start creating invoices and managing customers right now — this isn't a waitlist.",
   },
   {
-    q: "Can I collect deposits or take payments through the app right now?",
-    a: "Not yet. Deposits, partial payments, and in-app payment collection (Pay Now via Stripe) are next on the roadmap. Founder Beta members get them automatically, at no extra cost, the moment they ship.",
+    q: "Can I take payments through the app right now?",
+    a: "Yes. Invoice Pilot Pro supports online payments through Stripe and public invoice pages your customers can open and pay from directly — alongside automated reminders to nudge slow payers. Recurring invoices and a few advanced payment options are still on the roadmap, and Founder Beta members get them automatically the moment they ship.",
   },
   {
-    q: "How do I actually get paid right now?",
-    a: "Today, Invoice Pilot Pro handles invoice creation, customer records, and status tracking. You send the invoice, collect payment the way you do now (cash, check, Zelle, bank transfer), then mark it paid — your dashboard and records update instantly.",
+    q: "How do I actually get paid?",
+    a: "Send a professional invoice in seconds, share its public invoice page, and your customer can pay online via Stripe. Prefer to collect offline (cash, check, Zelle, bank transfer)? Just mark it paid — your dashboard, timeline, and records update instantly either way.",
   },
   {
     q: "What does '$20/month, locked while subscribed' mean?",
@@ -141,34 +169,75 @@ function PrimaryCta({
   );
 }
 
-// ─── SECTIONS ─────────────────────────────────────────────────────────────────
-
-function ProductScreenshot() {
+// ─── DEVICE SHOWCASE ──────────────────────────────────────────────────────────
+// Desktop browser-frame mockup + phone frame side by side.
+// Uses existing dashboard-screenshot.png for both — no PII in that image.
+// Swap src values when dedicated mobile screenshots are available.
+function DeviceShowcase() {
   return (
-    <div className="relative">
+    <div className="relative flex items-end justify-center gap-3 sm:gap-4">
       <div className="glow-rings" aria-hidden="true" />
-      <div className="screenshot-frame relative z-10 overflow-hidden rounded-2xl p-2">
-        <Image
-          src="/dashboard-screenshot.png"
-          alt="Invoice Pilot Pro product dashboard showing invoice detail view, customer list, and payment status"
-          width={1200}
-          height={760}
-          className="w-full rounded-xl"
-          priority
-        />
+
+      {/* Desktop — browser frame */}
+      <div className="relative z-10 w-full max-w-[560px] flex-1">
+        {/* Chrome bar */}
+        <div className="flex items-center gap-1.5 rounded-t-xl border border-b-0 border-[var(--border-strong)] bg-[var(--surface-raised)] px-3 py-2.5">
+          <span className="h-2.5 w-2.5 rounded-full bg-red-400/75" />
+          <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/75" />
+          <span className="h-2.5 w-2.5 rounded-full bg-green-400/75" />
+          <div className="ml-2 flex-1 rounded-md bg-[var(--surface)]/80 px-3 py-1 text-[11px] text-[var(--text-dim)]">
+            invoicepilotpro.app
+          </div>
+        </div>
+        {/* Screenshot */}
+        <div className="screenshot-frame overflow-hidden rounded-b-xl rounded-t-none border-t-0">
+          <Image
+            src="/dashboard-screenshot.png"
+            alt="Invoice Pilot Pro dashboard — invoice list, payment status, and business overview"
+            width={1200}
+            height={760}
+            className="w-full"
+            priority
+          />
+        </div>
       </div>
-      <div className="relative z-10 mt-4 flex items-center justify-center gap-2 text-xs text-[var(--text-muted)]">
-        <ShieldCheck className="h-3.5 w-3.5 text-[var(--success)]" />
-        Real product screenshot — customer details blurred for privacy
+
+      {/* Mobile — phone frame (hidden on xs, shown sm+) */}
+      <div className="relative z-10 mb-4 hidden shrink-0 sm:block">
+        <div
+          className="phone-frame overflow-hidden rounded-[28px] border-[5px] border-[var(--surface-raised)]"
+          style={{ width: 118 }}
+        >
+          {/* Notch */}
+          <div className="flex justify-center bg-[var(--surface-raised)] py-1.5">
+            <div className="h-2 w-10 rounded-full bg-[var(--bg-primary)]/60" />
+          </div>
+          {/* Screen */}
+          <div className="overflow-hidden" style={{ height: 216 }}>
+            <Image
+              src="/media/dashboard-mobile.jpeg"
+              alt="Invoice Pilot Pro on mobile — accounts receivable overview"
+              width={390}
+              height={812}
+              className="h-full w-full object-cover object-top"
+            />
+          </div>
+          {/* Home bar */}
+          <div className="flex justify-center bg-[var(--surface-raised)] py-2">
+            <div className="h-1 w-8 rounded-full bg-[var(--text-dim)]/40" />
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
+// ─── SECTIONS ─────────────────────────────────────────────────────────────────
+
 function Hero() {
   return (
     <section className="relative overflow-hidden">
-      <div className="mx-auto grid max-w-7xl gap-14 px-6 pt-20 pb-24 lg:grid-cols-[1fr_1.1fr] lg:gap-10 lg:pt-28">
+      <div className="mx-auto grid max-w-7xl gap-14 px-6 pt-20 pb-20 lg:grid-cols-[1fr_1.15fr] lg:gap-10 lg:pt-28">
         <div className="relative z-10">
           <FounderBadge />
           <h1 className="mt-7 text-[44px] font-semibold leading-[1.05] tracking-tight md:text-[64px]">
@@ -197,7 +266,7 @@ function Hero() {
             </div>
           </div>
 
-          {/* Live today inline strip */}
+          {/* Live today strip */}
           <div className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-3 text-[13px]">
             <span className="font-mono-data text-xs tracking-[0.2em] text-[var(--text-dim)]">
               LIVE TODAY:
@@ -215,7 +284,15 @@ function Hero() {
         </div>
 
         <div className="relative flex items-center justify-center lg:justify-end">
-          <ProductScreenshot />
+          <DeviceShowcase />
+        </div>
+      </div>
+
+      {/* Privacy note — below screenshot on mobile, aligned right on lg */}
+      <div className="mx-auto max-w-7xl px-6 pb-6">
+        <div className="flex items-center justify-center gap-2 text-xs text-[var(--text-muted)] lg:justify-end">
+          <ShieldCheck className="h-3.5 w-3.5 text-[var(--success)]" />
+          Real product screenshot — customer details blurred for privacy
         </div>
       </div>
     </section>
@@ -239,7 +316,10 @@ function TrustBadges() {
               key={label}
               className="flex items-center gap-2 text-sm text-[var(--text-muted)]"
             >
-              <Icon className="h-4 w-4 text-[var(--success)]" strokeWidth={1.75} />
+              <Icon
+                className="h-4 w-4 text-[var(--success)]"
+                strokeWidth={1.75}
+              />
               <span>{label}</span>
             </div>
           ))}
@@ -274,7 +354,10 @@ function TrustStrip() {
               key={label}
               className="flex items-center gap-2.5 text-sm text-[var(--text-muted)]"
             >
-              <Icon className="h-4 w-4 text-[var(--blue-highlight)]" strokeWidth={1.75} />
+              <Icon
+                className="h-4 w-4 text-[var(--blue-highlight)]"
+                strokeWidth={1.75}
+              />
               <span className="uppercase tracking-wider">{label}</span>
             </div>
           ))}
@@ -284,37 +367,128 @@ function TrustStrip() {
   );
 }
 
+// ─── VIDEO SECTION ─────────────────────────────────────────────────────────────
+// References public/media/DEMO.mov — served statically by Next.js.
+// autoPlay + muted satisfies browser autoplay policies.
+// controls lets users unmute/scrub; loop keeps it ambient.
+function VideoSection() {
+  return (
+    <section
+      id="demo"
+      className="scroll-mt-20 border-t border-[var(--border)] bg-[var(--bg-secondary)]/40"
+    >
+      <div className="mx-auto max-w-5xl px-6 py-20">
+        <div className="mb-12 text-center">
+          <p className="font-mono-data text-xs tracking-[0.22em] text-[var(--blue-highlight)]">
+            DEMO
+          </p>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-[40px]">
+            See Invoice Pilot Pro in Action
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-base text-[var(--text-muted)]">
+            Watch how quickly you can create an invoice, send it, and get paid.
+          </p>
+        </div>
+
+        {/* Browser-chrome wrapper */}
+        <div className="overflow-hidden rounded-2xl border border-[var(--border-strong)] bg-[var(--surface)] shadow-2xl">
+          {/* Chrome bar */}
+          <div className="flex items-center gap-1.5 border-b border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3">
+            <span className="h-2.5 w-2.5 rounded-full bg-red-400/75" />
+            <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/75" />
+            <span className="h-2.5 w-2.5 rounded-full bg-green-400/75" />
+            <div className="ml-2 flex flex-1 items-center gap-2 rounded-md bg-[var(--surface)]/80 px-3 py-1 text-[11px] text-[var(--text-dim)]">
+              <Play className="h-3 w-3 shrink-0" />
+              invoicepilotpro.app — Live Demo
+            </div>
+          </div>
+
+          {/* Video */}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            controls
+            className="aspect-video w-full bg-[var(--bg-primary)] object-cover"
+            aria-label="Invoice Pilot Pro product demo"
+          >
+            <source src="/media/DEMO.mov" type="video/quicktime" />
+            <source src="/media/DEMO.mp4" type="video/mp4" />
+          </video>
+        </div>
+
+        <p className="mt-4 text-center text-xs text-[var(--text-dim)]">
+          Full product walkthrough · Recorded in the live app
+        </p>
+      </div>
+    </section>
+  );
+}
+
 function Features() {
   return (
-    <section id="live" className="relative">
+    <section id="live" className="relative scroll-mt-20">
       <div className="mx-auto max-w-7xl px-6 py-24">
         <div className="text-center">
           <p className="font-mono-data text-xs tracking-[0.22em] text-[var(--blue-highlight)]">
-            BUILT FOR SERVICE BUSINESSES
+            WHAT&rsquo;S LIVE TODAY
           </p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-[40px]">
             Everything you need to run your business.
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-[var(--text-muted)]">
-            No bookkeeping degree required. No bloat. Just the tools you need
-            to create invoices, track payments, and know who owes you money.
+            No bookkeeping degree required. No bloat. Just the tools service
+            businesses use to create invoices, track payments, and know who owes
+            them money — all shipped and live in the app today.
           </p>
         </div>
+
+        {/* Feature cards */}
         <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
           {FEATURES.map(({ icon: Icon, title, body }) => (
-            <article
-              key={title}
-              className="feature-card group rounded-2xl p-6"
-            >
+            <article key={title} className="feature-card group rounded-2xl p-6">
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--blue-primary)]/10 ring-1 ring-inset ring-[var(--blue-primary)]/20 transition-all group-hover:bg-[var(--blue-primary)]/15 group-hover:ring-[var(--blue-primary)]/30">
-                <Icon className="h-5 w-5 text-[var(--blue-highlight)]" strokeWidth={1.8} />
+                <Icon
+                  className="h-5 w-5 text-[var(--blue-highlight)]"
+                  strokeWidth={1.8}
+                />
               </div>
-              <h3 className="mt-5 text-[17px] font-semibold text-[var(--text)]">{title}</h3>
+              <h3 className="mt-5 text-[17px] font-semibold text-[var(--text)]">
+                {title}
+              </h3>
               <p className="mt-2.5 text-[14px] leading-relaxed text-[var(--text-muted)]">
                 {body}
               </p>
             </article>
           ))}
+        </div>
+
+        {/* Shipped-capabilities checklist */}
+        <div className="mt-16 rounded-2xl border border-[var(--border)] bg-[var(--surface)]/40 p-8 md:p-10">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h3 className="text-lg font-semibold text-[var(--text)]">
+              Live in the app right now
+            </h3>
+            <span className="inline-flex items-center gap-2 rounded-full border border-[var(--success)]/25 bg-[var(--success)]/10 px-3 py-1 text-xs font-medium text-[var(--success)]">
+              <span
+                className="h-1.5 w-1.5 rounded-full bg-[var(--success)]"
+                aria-hidden="true"
+              />
+              Shipped &amp; ready
+            </span>
+          </div>
+          <ul className="mt-6 grid gap-x-8 gap-y-3.5 sm:grid-cols-2 lg:grid-cols-4">
+            {LIVE_CAPABILITIES.map((item) => (
+              <li
+                key={item}
+                className="flex items-start gap-2.5 text-[14px] text-[var(--text-muted)]"
+              >
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--success)]" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>
@@ -352,7 +526,7 @@ function FounderExplainer() {
               {
                 icon: Rocket,
                 title: "Every roadmap feature, at no extra cost",
-                body: "Deposits, payments, automations — every item ships to you the moment it's live.",
+                body: "Voice-to-Invoice, AI follow-ups, mobile apps, integrations — every item ships to you the moment it's live.",
               },
               {
                 icon: CheckCircle2,
@@ -364,7 +538,9 @@ function FounderExplainer() {
                 <item.icon className="mt-0.5 h-5 w-5 shrink-0 text-[var(--success)]" />
                 <div>
                   <p className="font-medium text-[var(--text)]">{item.title}</p>
-                  <p className="mt-1 text-sm text-[var(--text-muted)]">{item.body}</p>
+                  <p className="mt-1 text-sm text-[var(--text-muted)]">
+                    {item.body}
+                  </p>
                 </div>
               </li>
             ))}
@@ -377,7 +553,7 @@ function FounderExplainer() {
 
 function Roadmap() {
   return (
-    <section id="roadmap" className="relative">
+    <section id="roadmap" className="relative scroll-mt-20">
       <div className="mx-auto max-w-7xl px-6 py-24">
         <div className="max-w-2xl">
           <p className="font-mono-data text-xs tracking-[0.22em] text-[var(--blue-highlight)]">
@@ -387,8 +563,9 @@ function Roadmap() {
             Coming next, included in Founder Beta.
           </h2>
           <p className="mt-5 text-base leading-relaxed text-[var(--text-muted)]">
-            Not live yet — but Founder Beta members get every one of these the
-            moment it ships, at no extra cost, no re-signup required.
+            The core product is already live. These are the next big bets —
+            Founder Beta members get every one of them the moment it ships, at
+            no extra cost, no re-signup required.
           </p>
         </div>
         <ul className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -410,30 +587,44 @@ function Roadmap() {
   );
 }
 
-// Pricing — Founder Beta featured prominently. Future tiers shown as preview only
-// (disabled) to demonstrate value of locking in early. This eliminates all dead
-// Stripe link exposure on the pricing page.
 function Pricing() {
   const futureTiers = [
     {
       name: "Solo",
       price: 35,
-      bullets: ["Unlimited invoices & customers", "Email support", "All live features"],
+      bullets: [
+        "Unlimited invoices & customers",
+        "Email support",
+        "All live features",
+      ],
     },
     {
       name: "Pro",
       price: 50,
-      bullets: ["Everything in Solo", "Deposits & partial payments", "Automated follow-ups", "Priority support"],
+      bullets: [
+        "Everything in Solo",
+        "Deposits & partial payments",
+        "Automated follow-ups",
+        "Priority support",
+      ],
     },
     {
       name: "Team",
       price: 80,
-      bullets: ["Everything in Pro", "Multi-user access", "Team roles & permissions", "Dedicated onboarding"],
+      bullets: [
+        "Everything in Pro",
+        "Multi-user access",
+        "Team roles & permissions",
+        "Dedicated onboarding",
+      ],
     },
   ];
 
   return (
-    <section id="pricing" className="border-t border-[var(--border)] bg-[var(--bg-secondary)]/40">
+    <section
+      id="pricing"
+      className="scroll-mt-20 border-t border-[var(--border)] bg-[var(--bg-secondary)]/40"
+    >
       <div className="mx-auto max-w-7xl px-6 py-24">
         <div className="text-center">
           <p className="font-mono-data text-xs tracking-[0.22em] text-[var(--blue-highlight)]">
@@ -496,13 +687,13 @@ function Pricing() {
               <ArrowRight className="h-4 w-4" />
             </PrimaryCta>
             <p className="mt-4 text-center text-xs text-[var(--text-dim)]">
-              After paying, you&rsquo;ll be redirected to a short onboarding form.
-              We&rsquo;ll reach out within 24 hours.
+              After paying, you&rsquo;ll be redirected to a short onboarding
+              form. We&rsquo;ll reach out within 24 hours.
             </p>
           </div>
         </div>
 
-        {/* Future tiers preview (disabled) */}
+        {/* Future tiers preview — disabled / greyed out */}
         <div className="mx-auto mt-16 max-w-4xl">
           <p className="mb-6 text-center text-sm font-medium tracking-wider text-[var(--text-dim)]">
             STANDARD PRICING AFTER BETA
@@ -523,13 +714,18 @@ function Pricing() {
                   {tier.name}
                 </p>
                 <div className="mt-2 flex items-baseline gap-1">
-                  <span className="text-3xl font-semibold text-[var(--text)]">${tier.price}</span>
+                  <span className="text-3xl font-semibold text-[var(--text)]">
+                    ${tier.price}
+                  </span>
                   <span className="text-sm text-[var(--text-muted)]">/mo</span>
                 </div>
                 <ul className="mt-4 space-y-2 text-xs text-[var(--text-dim)]">
                   {tier.bullets.map((b) => (
                     <li key={b} className="flex items-start gap-2">
-                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[var(--text-dim)]" aria-hidden="true" />
+                      <span
+                        className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[var(--text-dim)]"
+                        aria-hidden="true"
+                      />
                       {b}
                     </li>
                   ))}
@@ -541,7 +737,8 @@ function Pricing() {
             Founder Beta locks in $20/month — that&rsquo;s{" "}
             <span className="text-[var(--text-muted)]">43% less than Solo</span>{" "}
             and{" "}
-            <span className="text-[var(--text-muted)]">75% less than Team</span>.
+            <span className="text-[var(--text-muted)]">75% less than Team</span>
+            .
           </p>
         </div>
       </div>
@@ -551,7 +748,7 @@ function Pricing() {
 
 function Faq() {
   return (
-    <section id="faq" className="relative">
+    <section id="faq" className="relative scroll-mt-20">
       <div className="mx-auto max-w-3xl px-6 py-24">
         <div className="text-center">
           <p className="font-mono-data text-xs tracking-[0.22em] text-[var(--blue-highlight)]">
@@ -590,7 +787,7 @@ function QrSection() {
             <div className="screenshot-frame rounded-2xl p-3">
               <Image
                 src="/qr.png"
-                alt="QR code to join Invoice Pilot Pro Founder Beta"
+                alt="QR code — scan to open Invoice Pilot Pro at invoicepilotpro.app"
                 width={160}
                 height={160}
                 className="h-40 w-40 rounded-xl"
@@ -610,15 +807,54 @@ function QrSection() {
               to get paid faster?
             </h2>
             <p className="mt-3 text-base text-[var(--text-muted)]">
-              Scan the QR code to share Invoice Pilot Pro with another business
-              owner. Perfect for referrals, networking events, social media, and
-              group chats.
+              Scan the QR code to instantly open{" "}
+              <span className="text-[var(--text)]">invoicepilotpro.app</span>.
+              Perfect for referrals, networking events, social media, and group
+              chats.
             </p>
             <div className="mt-5 flex items-center gap-2 text-sm text-[var(--text-dim)]">
               <Clock className="h-4 w-4" />
               Setup takes under 5 minutes
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FounderStory() {
+  return (
+    <section className="relative border-t border-[var(--border)]">
+      <div className="mx-auto max-w-3xl px-6 py-24">
+        <div className="flex items-center gap-2">
+          <Heart className="h-4 w-4 text-[var(--blue-highlight)]" />
+          <p className="font-mono-data text-xs tracking-[0.22em] text-[var(--blue-highlight)]">
+            OUR STORY
+          </p>
+        </div>
+        <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tight md:text-[40px]">
+          Built by someone who
+          <br />
+          <span className="text-gradient-blue">lived the problem.</span>
+        </h2>
+        <div className="mt-7 space-y-5 text-base leading-relaxed text-[var(--text-muted)]">
+          <p>
+            Invoice Pilot Pro wasn&rsquo;t created inside a boardroom. It was
+            built by a real service business owner after years of dealing with
+            late payments, forgotten invoices, paperwork, and chasing customers
+            for money.
+          </p>
+          <p>
+            Every feature exists because it solves a real operational problem
+            experienced in the field.
+          </p>
+          <p>
+            Whether you&rsquo;re a contractor, freelancer, consultant, agency,
+            or service business owner, Invoice Pilot Pro was designed to help
+            you spend less time managing paperwork and more time growing your
+            business.
+          </p>
         </div>
       </div>
     </section>
@@ -659,7 +895,10 @@ function FinalCta() {
             { label: "$20/month", sub: "Locked in" },
             { label: "24 hr", sub: "Onboarding" },
           ].map(({ label, sub }) => (
-            <div key={label} className="rounded-xl border border-[var(--border)] bg-[var(--surface)]/40 p-3">
+            <div
+              key={label}
+              className="rounded-xl border border-[var(--border)] bg-[var(--surface)]/40 p-3"
+            >
               <p className="text-lg font-semibold text-[var(--text)]">{label}</p>
               <p className="mt-0.5 text-xs text-[var(--text-dim)]">{sub}</p>
             </div>
@@ -690,7 +929,10 @@ function Footer() {
           <p>Invoice Pilot Pro is a product of 6 Star Service.</p>
           <p>
             Contact:{" "}
-            <a href="mailto:6starservice6@gmail.com" className="hover:text-[var(--text)]">
+            <a
+              href="mailto:6starservice6@gmail.com"
+              className="hover:text-[var(--text)]"
+            >
               6starservice6@gmail.com
             </a>
           </p>
@@ -719,12 +961,14 @@ export default function Home() {
         <Hero />
         <TrustBadges />
         <TrustStrip />
+        <VideoSection />
         <Features />
         <FounderExplainer />
         <Roadmap />
         <Pricing />
         <Faq />
         <QrSection />
+        <FounderStory />
         <FinalCta />
       </main>
       <Footer />

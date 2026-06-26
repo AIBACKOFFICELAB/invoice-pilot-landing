@@ -4,27 +4,27 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Invoice Pilot Pro — Get Paid Faster Without Chasing Customers",
   description:
-    "Invoice Pilot Pro helps contractors, plumbers, HVAC companies, electricians, handymen, and service businesses create professional invoices, track payments, and stay organized — without the complexity of QuickBooks. Founder Beta now open at $20/month.",
-  metadataBase: new URL("https://invoicepilotpro.com"),
+    "Invoice Pilot Pro helps service businesses create professional invoices, track payments, and get paid faster — without the complexity of traditional accounting software. Founder Beta now open at $20/month.",
+  metadataBase: new URL("https://invoicepilotpro.app"),
   applicationName: "Invoice Pilot Pro",
   authors: [{ name: "6 Star Service" }],
   creator: "6 Star Service",
   publisher: "6 Star Service",
   keywords: [
-    "contractor invoicing software",
-    "invoice app for contractors",
-    "plumber invoicing",
-    "HVAC invoicing",
-    "electrician invoice app",
+    "invoicing software for small business",
+    "service business invoicing",
+    "freelancer invoice app",
     "get paid faster",
     "invoice tracking",
-    "contractor business management",
+    "small business payment tracking",
+    "contractor invoicing",
+    "professional invoice app",
   ],
   openGraph: {
     title: "Invoice Pilot Pro — Get Paid Faster Without Chasing Customers",
     description:
-      "Founder Beta now open at $20/month. Professional invoices, customer management, and payment tracking built for contractors — not accountants.",
-    url: "https://invoicepilotpro.com",
+      "Founder Beta now open at $20/month. Professional invoices, customer management, and payment tracking for service businesses — not accountants.",
+    url: "https://invoicepilotpro.app",
     siteName: "Invoice Pilot Pro",
     type: "website",
     images: [
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Invoice Pilot Pro — Get Paid Faster Without Chasing Customers",
     description:
-      "Founder Beta now open. Professional invoices & payment tracking built for contractors. $20/month locked while subscribed.",
+      "Founder Beta now open. Professional invoices & payment tracking for service businesses. $20/month locked while subscribed.",
     images: ["/og-image.png"],
   },
   icons: {

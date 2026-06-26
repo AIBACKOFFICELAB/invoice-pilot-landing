@@ -177,7 +177,7 @@ Copy exactly:
 
 In the meantime: Invoice Pilot Pro is live today. You can create professional invoices, manage customers, and track every invoice from draft to paid right now.
 
-→ invoicepilotpro.com
+→ app.invoicepilotpro.app
 
 — The Invoice Pilot Pro Team"
 

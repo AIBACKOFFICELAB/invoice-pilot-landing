@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://invoicepilotpro.com/sitemap.xml
+Sitemap: https://invoicepilotpro.app/sitemap.xml

@@ -38,11 +38,11 @@ const LIVE_TODAY_ITEMS = [
 ];
 
 const TRADES = [
-  { icon: Wrench, label: "Plumbing" },
-  { icon: Wind, label: "HVAC" },
-  { icon: Zap, label: "Electrical" },
-  { icon: HardHat, label: "General Contracting" },
-  { icon: Hammer, label: "Handyman Services" },
+  { icon: Wrench, label: "Contractors" },
+  { icon: Wind, label: "Freelancers" },
+  { icon: Zap, label: "Consultants" },
+  { icon: HardHat, label: "Agencies" },
+  { icon: Hammer, label: "Service Businesses" },
 ];
 
 const FEATURES = [
@@ -102,7 +102,7 @@ const FAQ = [
   },
   {
     q: "What does 'beta' actually mean here?",
-    a: "It means real, but early. You'll get full access to everything listed under What's Live, you may hit the occasional rough edge, and your feedback directly shapes what we build next.",
+    a: "It means real, but early. You'll get full access to everything live today, you may hit the occasional rough edge, and your feedback directly shapes what we build next.",
   },
   {
     q: "What happens after I pay?",
@@ -179,10 +179,9 @@ function Hero() {
             <span className="text-gradient-blue">customers.</span>
           </h1>
           <p className="mt-6 max-w-xl text-base leading-relaxed text-[var(--text-muted)] md:text-lg">
-            Invoice Pilot Pro helps contractors, plumbers, HVAC companies,
-            electricians, handymen, and freelancers create professional invoices,
-            track payments, and stay organized — without the complexity of
-            QuickBooks.
+            Invoice Pilot Pro helps service businesses create professional
+            invoices, track payments, and get paid faster—without the complexity
+            of traditional accounting software.
           </p>
           <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
             <PrimaryCta className="px-6 py-3.5 text-[15px]">
@@ -223,9 +222,48 @@ function Hero() {
   );
 }
 
+const TRUST_BADGES = [
+  { icon: CheckCircle2, label: "Mobile Friendly" },
+  { icon: ShieldCheck, label: "Secure Stripe Payments" },
+  { icon: Clock, label: "Setup in Under 5 Minutes" },
+  { icon: Lock, label: "Founder Pricing Locked" },
+];
+
+function TrustBadges() {
+  return (
+    <section className="border-b border-[var(--border)] bg-[var(--bg-secondary)]/40">
+      <div className="mx-auto max-w-7xl px-6 py-6">
+        <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
+          {TRUST_BADGES.map(({ icon: Icon, label }) => (
+            <div
+              key={label}
+              className="flex items-center gap-2 text-sm text-[var(--text-muted)]"
+            >
+              <Icon className="h-4 w-4 text-[var(--success)]" strokeWidth={1.75} />
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
+        <p className="mt-5 text-center text-xs tracking-[0.18em] text-[var(--text-dim)]">
+          Built for{" "}
+          <span className="text-[var(--text-muted)]">Contractors</span>
+          {" • "}
+          <span className="text-[var(--text-muted)]">Freelancers</span>
+          {" • "}
+          <span className="text-[var(--text-muted)]">Consultants</span>
+          {" • "}
+          <span className="text-[var(--text-muted)]">Agencies</span>
+          {" • "}
+          <span className="text-[var(--text-muted)]">Service Businesses</span>
+        </p>
+      </div>
+    </section>
+  );
+}
+
 function TrustStrip() {
   return (
-    <section className="border-y border-[var(--border)] bg-[var(--bg-secondary)]/40">
+    <section className="border-b border-[var(--border)] bg-[var(--bg-secondary)]/40">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-8 gap-y-6 px-6 py-8">
         <span className="font-mono-data text-xs tracking-[0.22em] text-[var(--text-dim)]">
           BUILT FOR:
@@ -252,7 +290,7 @@ function Features() {
       <div className="mx-auto max-w-7xl px-6 py-24">
         <div className="text-center">
           <p className="font-mono-data text-xs tracking-[0.22em] text-[var(--blue-highlight)]">
-            BUILT FOR CONTRACTORS
+            BUILT FOR SERVICE BUSINESSES
           </p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-[40px]">
             Everything you need to run your business.
@@ -438,7 +476,7 @@ function Pricing() {
             </div>
             <ul className="mt-7 space-y-3.5 text-sm text-[var(--text-muted)]">
               {[
-                "Everything under What's Live today",
+                "Everything live today — invoices, customers, payment tracking",
                 "Every roadmap feature, the moment it ships",
                 "Direct say in what we build next",
                 "Priority onboarding & personal setup",
@@ -563,30 +601,22 @@ function QrSection() {
             <div className="flex items-center gap-2">
               <QrCode className="h-4 w-4 text-[var(--blue-highlight)]" />
               <p className="font-mono-data text-xs tracking-[0.22em] text-[var(--blue-highlight)]">
-                SHARE AT THE JOB SITE
+                SHARE WITH A FRIEND OR CLIENT
               </p>
             </div>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">
-              Know another contractor
+              Know someone who wants
               <br />
-              who needs to get paid faster?
+              to get paid faster?
             </h2>
             <p className="mt-3 text-base text-[var(--text-muted)]">
-              Scan the QR code to open this page. Works great for sharing on
-              Instagram, at trade shows, and in group chats.
+              Scan the QR code to share Invoice Pilot Pro with another business
+              owner. Perfect for referrals, networking events, social media, and
+              group chats.
             </p>
-            <div className="mt-5 flex flex-wrap items-center gap-4">
-              <a
-                href={STRIPE_FOUNDER_LINK}
-                className="btn-primary inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium"
-              >
-                Join now — $20/month
-                <ArrowRight className="h-4 w-4" />
-              </a>
-              <div className="flex items-center gap-2 text-sm text-[var(--text-dim)]">
-                <Clock className="h-4 w-4" />
-                Setup takes under 5 minutes
-              </div>
+            <div className="mt-5 flex items-center gap-2 text-sm text-[var(--text-dim)]">
+              <Clock className="h-4 w-4" />
+              Setup takes under 5 minutes
             </div>
           </div>
         </div>
@@ -687,6 +717,7 @@ export default function Home() {
       <Nav ctaHref={STRIPE_FOUNDER_LINK} />
       <main>
         <Hero />
+        <TrustBadges />
         <TrustStrip />
         <Features />
         <FounderExplainer />

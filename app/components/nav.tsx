@@ -37,9 +37,9 @@ export function Nav({ ctaHref }: { ctaHref: string }) {
           <Image
             src="/logo-nav.png"
             alt="Invoice Pilot Pro"
-            width={36}
+            width={31}
             height={36}
-            className="h-9 w-9"
+            className="h-9 w-auto"
             priority
           />
           <span className="text-[15px] font-semibold tracking-[0.18em] text-[var(--text)]">

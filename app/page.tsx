@@ -917,9 +917,9 @@ function Footer() {
           <Image
             src="/logo-nav.png"
             alt="Invoice Pilot Pro"
-            width={28}
+            width={24}
             height={28}
-            className="h-7 w-7"
+            className="h-7 w-auto"
           />
           <span className="text-sm font-medium tracking-wider text-[var(--text)]">
             INVOICE PILOT <span className="text-[var(--blue-highlight)]">PRO</span>
